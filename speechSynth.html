@@ -10,7 +10,9 @@
 
   <!-- Main Stylesheet & Scripts -->
   <link rel="stylesheet" href="assets/styles/global.css" />
+  <script src="assets/scripts/js-confetti.browser.js"></script>
   <script src="assets/scripts/speechSynth.js" type="module"></script>
+  <script src="https://unpkg.com/launchdarkly-js-client-sdk@2"></script>
 </head>
 
 <body>
@@ -32,6 +34,32 @@
       <button>Press to Talk</button>
     </section>
   </main>
+  <script>
+    const jsConfetti = new JSConfetti();
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for ( var i = 0; i < 12; i++ ) {
+      result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+  let user = {
+    key: result
+  };
+
+
+  let ldclient = LDClient.initialize('61a1ba537386bf104964aa47', user);
+  function render() {
+    let shouldShow = ldclient.variation('confetti', false);
+    // document.querySelector('body').classList.add('blue');
+    if (shouldShow) {
+      document.querySelector('#explore > button').addEventListener('click', () => {
+        jsConfetti.addConfetti();
+      })
+    }
+  }
+
+  ldclient.on('ready', render);
+  ldclient.on('change', render);
+</script>
 </body>
 
 </html>

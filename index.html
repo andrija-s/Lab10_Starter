@@ -2,8 +2,8 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
   <title>Lab 10 - Return of the Party Horn</title>
@@ -14,6 +14,7 @@
   <!-- Main Stylesheet & Scripts -->
   <link rel="stylesheet" href="assets/styles/global.css" />
   <script src="assets/scripts/partyHorn.js" type="module"></script>
+  <script src="https://unpkg.com/launchdarkly-js-client-sdk@2"></script>
 </head>
 
 <body>
@@ -42,6 +43,27 @@
       <audio class="hidden" src=""></audio>
     </section>
   </main>
+  <script>
+    let result = '';
+    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    for ( var i = 0; i < 12; i++ ) {
+      result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+  let user = {
+    key: result
+  };
+
+
+  let ldclient = LDClient.initialize('61a1ba537386bf104964aa47', user);
+  function render() {
+    let shouldShow = ldclient.variation('blue-background', false);
+    // document.querySelector('body').classList.add('blue');
+    if (shouldShow) document.body.classList.add('blue');
+  }
+
+  ldclient.on('ready', render);
+  ldclient.on('change', render);
+</script>
 </body>
 
 </html>
